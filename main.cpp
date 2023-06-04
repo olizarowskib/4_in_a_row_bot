@@ -265,7 +265,7 @@ int main(){
     cin>>gracz;
     cout<<"\n";
     uint64_t t,k;
-    k=400;
+    k=600;
     cout<<"\n";
     bool grajDalej=true;
     p.print();
