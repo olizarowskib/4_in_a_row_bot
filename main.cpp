@@ -1,6 +1,5 @@
  #include <bits/stdc++.h>
 using namespace std;
-// int ruch=1;
 uint64_t timeMilisec() {
   using namespace std::chrono;
   return duration_cast<milliseconds>(system_clock::now().time_since_epoch()).count();
@@ -173,7 +172,6 @@ struct bot{
                     continue;
                 }
                 mp.add(i,g%2+1);
-                // mp.print();
                 wynik=mp.sprawdz(i);
                 if(wynik==4){
                     mini=min(mini,0);
@@ -194,8 +192,7 @@ struct bot{
                 if(mini==-sym){
                     return -sym;
                 }
-                // mp.print();
-            }
+             }
             return mini;
         }else{
             wynik=zasymuluj(g%2+1);
@@ -212,7 +209,6 @@ struct bot{
                 while(mp.granice[kolumna-1]<0)kolumna=rand()%7+1;
                 zmiany.push(kolumna);
                 mp.add(kolumna,gracz);
-                // mp.print();
                 wynik=mp.sprawdz(kolumna);
                 gracz=gracz%2+1;
             }
@@ -220,15 +216,11 @@ struct bot{
                 if(gracz==g%2+1) balans++;
                 else balans--;
             }
-            // mp.print();
             wynik=mp.sprawdz(kolumna);
             while(!zmiany.empty()){
                 mp.del(zmiany.top());
-                // mp.print();
                 zmiany.pop();
-            }
-            // mp.print();
-            
+            }            
         }
         return balans;
     }
@@ -267,73 +259,47 @@ struct bot{
 int main(){
     srand(time(NULL));
     int gracz; int aktKolumna,wynik;
-    int wygraneAlfreda=0; int wygraneManka=0; int remisy=0;
-    bot alfred(6,20,2);
-    bot maniek(5,50,1);
-    uint64_t t,k,sumManiekT, sumAlfredT;
-    k=500;
+    int AlfredDepth=5; int AlfredSym=30;
+    bot alfred(AlfredDepth,AlfredSym,2);
+    cout<<"jesli chcesz zaczynac wpisz 1 w innym wypdaky wpisz 2: ";
+    cin>>gracz;
+    cout<<"\n";
+    uint64_t t,k;
+    k=400;
     cout<<"\n";
     bool grajDalej=true;
     p.print();
-    int liczbaGier=20;
-    while(liczbaGier--){
-        p=plansza();
-        // cout<<"Jesli chcesz zaczynac wpisz 1. w innym przypadku wpisz 2: ";
-        // cin>>gracz;
-        gracz=liczbaGier%2+1;
-        // alfred.depth=6;
-        // maniek.depth=6;
-        sumManiekT = 0;
-        sumAlfredT = 0;
-        
-        while(true){
-            liczbaMinMax=0;
-            if(gracz==1){
-                // cout<<"wybierz kolumne: ";
-                // cin>>aktKolumna;
-                // cout<<"\n";
-                t=timeMilisec();
-                aktKolumna=maniek.wykonajRuch();
-                t=timeMilisec()-t;
-                sumManiekT += t;
-                // cout<<"maniek wybiera kolumne "<<aktKolumna<<" w "<<t<<" milisekundach, liczba ruchów: "<<liczbaMinMax<<"\n";
-                // if(t<k){
-                //     maniek.depth++;
-                // }
-            }else{
-                t=timeMilisec();
-                aktKolumna=alfred.wykonajRuch();
-                t=timeMilisec()-t;
-                sumAlfredT += t;
-                // cout<<"alfred wybiera kolumne "<<aktKolumna<<" w "<<t<<" milisekundach, liczba ruchów: "<<liczbaMinMax<<"\n";
-
-                // if(t<k){
-                //     alfred.depth++;
-                // }
+    while(true){
+        liczbaMinMax=0;
+        if(gracz==1){
+            cout<<"wybierz kolumne: ";
+            cin>>aktKolumna;
+            cout<<"\n";
+        }else{
+            t=timeMilisec();
+            aktKolumna=alfred.wykonajRuch();
+            t=timeMilisec()-t;
+            cout<<"alfred wybiera kolumne "<<aktKolumna<<" w "<<t<<" milisekundach\n";
+            if(t<k){
+                alfred.sym+=10;
+                if(alfred.sym>=50){
+                    alfred.depth++;
+                    alfred.sym=AlfredSym;
+                }
             }
-            p.add(aktKolumna,gracz);
-            wynik=p.sprawdz(aktKolumna);
-            // p.print();
-            if(wynik==4){
-                cout<<"REMIS!!!!\n";
-                remisy++;
-                break;
-            }
-            if(wynik==gracz){
-                cout<<"WYGRYWA GRACZ "<<gracz<<"!!!!\n";
-                if(gracz==1) wygraneManka++;
-                else wygraneAlfreda++;
-                break;
-            }
-            gracz=gracz%2+1;
-            // ruch++;
         }
-        cout<<"SUM!! maniek czas "<<sumManiekT<<" milisekundach\n";
-        cout<<"SUM!! alfred czas "<<sumAlfredT<<" milisekundach\n";
-        // cout<<"czy chcesz grać dalej? jeśli tak wpisz 1, w przeciwnym wypadky wpisz 0: ";
-        // cin>>grajDalej;
-
+        p.add(aktKolumna,gracz);
+        wynik=p.sprawdz(aktKolumna);
+        p.print();
+        if(wynik==4){
+            cout<<"REMIS!!!!\n";
+            break;
+        }
+        if(wynik==gracz){
+            cout<<"WYGRYWA GRACZ "<<gracz<<"!!!!\n";
+            break;
+        }
+        gracz=gracz%2+1;
     }
-    cout<<"Alfred wygral "<<wygraneAlfreda<<" razy, Maniek wygrał "<< wygraneManka<< " razy i zremisowali "<<remisy<<" razy\n";
     return 0;
 }
