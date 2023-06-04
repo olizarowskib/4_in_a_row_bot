@@ -265,7 +265,7 @@ int main(){
     cin>>gracz;
     cout<<"\n";
     uint64_t t,k;
-    k=600;
+    k=700;
     cout<<"\n";
     bool grajDalej=true;
     p.print();
@@ -282,7 +282,7 @@ int main(){
             cout<<"alfred wybiera kolumne "<<aktKolumna<<" w "<<t<<" milisekundach\n";
             if(t<k){
                 alfred.sym+=10;
-                if(alfred.sym>=50){
+                if(alfred.sym>=60){
                     alfred.depth++;
                     alfred.sym=AlfredSym;
                 }
